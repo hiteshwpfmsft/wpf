@@ -343,7 +343,7 @@ namespace System.Windows.Automation.Peers
             {
                 if (this.OwningGrid != null)
                 {
-                    return this.OwningGrid.ColumnDefinitions.Count;
+                    return ((ColumnDefinitionCollection)this.OwningGrid.ColumnDefinitions).Count;
                 }
 
                 return 0;
@@ -359,11 +359,11 @@ namespace System.Windows.Automation.Peers
                     if (this.OwningCalendar.DisplayMode == CalendarMode.Month)
                     {
                         // In Month DisplayMode, since first row is DayTitles, we return the RowCount-1
-                        return Math.Max(0, this.OwningGrid.RowDefinitions.Count - 1);
+                        return Math.Max(0, ((RowDefinitionCollection)this.OwningGrid.RowDefinitions).Count - 1);
                     }
                     else
                     {
-                        return this.OwningGrid.RowDefinitions.Count;
+                        return ((RowDefinitionCollection)this.OwningGrid.RowDefinitions).Count;
                     }
                 }
 
@@ -379,7 +379,7 @@ namespace System.Windows.Automation.Peers
                 row++;
             }
 
-            if (this.OwningGrid != null && row >= 0 && row < this.OwningGrid.RowDefinitions.Count && column >= 0 && column < this.OwningGrid.ColumnDefinitions.Count)
+            if (this.OwningGrid != null && row >= 0 && row < ((RowDefinitionCollection)this.OwningGrid.RowDefinitions).Count && column >= 0 && column < ((ColumnDefinitionCollection)this.OwningGrid.ColumnDefinitions).Count)
             {
                 foreach (UIElement child in this.OwningGrid.Children)
                 {

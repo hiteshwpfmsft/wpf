@@ -898,11 +898,11 @@ namespace System.Windows
             {
                 if (childNodeColumnDefinition != null)
                 {
-                    parentGrid.ColumnDefinitions.Add(childNodeColumnDefinition);
+                    ((ColumnDefinitionCollection)parentGrid.ColumnDefinitions).Add(childNodeColumnDefinition);
                 }
                 else if (childNodeRowDefinition != null)
                 {
-                    parentGrid.RowDefinitions.Add(childNodeRowDefinition);
+                    ((RowDefinitionCollection)parentGrid.RowDefinitions).Add(childNodeRowDefinition);
                 }
             }
             else

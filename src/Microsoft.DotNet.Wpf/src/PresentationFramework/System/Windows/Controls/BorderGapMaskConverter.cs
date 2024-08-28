@@ -88,15 +88,15 @@ namespace System.Windows.Controls
             colDef1.Width = new GridLength(lineWidth);
             colDef2.Width = new GridLength(headerWidth);
             colDef3.Width = new GridLength(1, GridUnitType.Star);
-            grid.ColumnDefinitions.Add(colDef1);
-            grid.ColumnDefinitions.Add(colDef2);
-            grid.ColumnDefinitions.Add(colDef3);
+            ((ColumnDefinitionCollection)grid.ColumnDefinitions).Add(colDef1);
+            ((ColumnDefinitionCollection)grid.ColumnDefinitions).Add(colDef2);
+            ((ColumnDefinitionCollection)grid.ColumnDefinitions).Add(colDef3);
             RowDefinition rowDef1 = new RowDefinition();
             RowDefinition rowDef2 = new RowDefinition();
             rowDef1.Height = new GridLength(borderHeight / 2);
             rowDef2.Height = new GridLength(1, GridUnitType.Star);
-            grid.RowDefinitions.Add(rowDef1);
-            grid.RowDefinitions.Add(rowDef2);
+            ((RowDefinitionCollection)grid.RowDefinitions).Add(rowDef1);
+            ((RowDefinitionCollection)grid.RowDefinitions).Add(rowDef2);
 
             Rectangle rectColumn1 = new Rectangle();
             Rectangle rectColumn2 = new Rectangle();
