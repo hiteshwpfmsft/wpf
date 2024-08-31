@@ -548,7 +548,7 @@ namespace System.Windows.Controls
                 }
 
                 // Get # of rows/columns in the resize direction
-                int count = (_resizeData.ResizeDirection == GridResizeDirection.Columns) ? ((ColumnDefinitionCollection)_resizeData.Grid.ColumnDefinitions).Count : ((RowDefinitionCollection)_resizeData.Grid.RowDefinitions).Count;
+                int count = (_resizeData.ResizeDirection == GridResizeDirection.Columns) ? _resizeData.Grid.ColumnDefinitions.Count : _resizeData.Grid.RowDefinitions.Count;
 
                 if (index1 >= 0 && index2 < count)
                 {
@@ -766,7 +766,7 @@ namespace System.Windows.Controls
         // Gets Column or Row definition at index from grid based on resize direction
         private static DefinitionBase GetGridDefinition(Grid grid, int index, GridResizeDirection direction)
         {
-            return direction == GridResizeDirection.Columns ? (DefinitionBase)((ColumnDefinitionCollection)grid.ColumnDefinitions)[index] : (DefinitionBase)((RowDefinitionCollection)grid.RowDefinitions)[index];
+            return direction == GridResizeDirection.Columns ? (DefinitionBase)grid.ColumnDefinitions[index] : (DefinitionBase)grid.RowDefinitions[index];
         }
 
         // Retrieves the ActualWidth or ActualHeight of the definition depending on its type Column or Row

@@ -31,75 +31,11 @@ using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Media;
 using System.Windows.Markup;
-using System.Globalization;
 
 #pragma warning disable 1634, 1691  // suppressing PreSharp warnings
 
 namespace System.Windows.Controls
 {
-
-public class ColumnDefinitionCollectionConverter : TypeConverter
-{
-    public override bool CanConvertFrom(ITypeDescriptorContext context, Type sourceType)
-    {
-        return sourceType == typeof(string) || base.CanConvertFrom(context, sourceType);
-    }
-
-    public override object ConvertFrom(ITypeDescriptorContext context, CultureInfo culture, object value)
-    {
-        if (value is string input && context?.Instance is Grid grid)
-        {
-            var collection = new ColumnDefinitionCollection(grid); // Pass Grid instance
-            var converter = new GridLengthConverter();
-
-            foreach (var length in input.Split(','))
-            {
-                if (converter.ConvertFromString(length.Trim()) is GridLength gridLength)
-                {
-                    collection.Add(new ColumnDefinition { Width = gridLength });
-                }
-            }
-
-            return collection;
-        }
-
-        return base.ConvertFrom(context, culture, value);
-    }
-}
-
-
-public class RowDefinitionCollectionConverter : TypeConverter
-{
-    public override bool CanConvertFrom(ITypeDescriptorContext context, Type sourceType)
-    {
-        return sourceType == typeof(string) || base.CanConvertFrom(context, sourceType);
-    }
-
-    public override object ConvertFrom(ITypeDescriptorContext context, CultureInfo culture, object value)
-    {
-        if (value is string input && context?.Instance is Grid grid)
-        {
-            var collection = new RowDefinitionCollection(grid); // Pass Grid instance
-            var converter = new GridLengthConverter();
-
-            foreach (var length in input.Split(','))
-            {
-                if (converter.ConvertFromString(length.Trim()) is GridLength gridLength)
-                {
-                    collection.Add(new RowDefinition { Height = gridLength });
-                }
-            }
-
-            return collection;
-        }
-
-        return base.ConvertFrom(context, culture, value);
-    }
-}
-
-
-
-
     /// <summary>
     /// Grid
     /// </summary>
@@ -333,153 +269,35 @@ public class RowDefinitionCollectionConverter : TypeConverter
             set { SetValue(ShowGridLinesProperty, value); }
         }
 
-[TypeConverter(typeof(ColumnDefinitionCollectionConverter))]
-[DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
-public ColumnDefinitionCollection ColumnDefinitions
-{
-    get
-    {
-        if (_data == null) _data = new ExtendedData();
-        // Initialize with Grid if required
-        if (_data.ColumnDefinitions == null)
+        /// <summary>
+        /// Returns a ColumnDefinitionCollection of column definitions.
+        /// </summary>
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
+        public ColumnDefinitionCollection ColumnDefinitions
         {
-            _data.ColumnDefinitions = new ColumnDefinitionCollection(this);
-        }
-        return _data.ColumnDefinitions;
-    }
-    set
-    {
-        if (value == null) throw new ArgumentNullException(nameof(value));
-        if (_data == null) _data = new ExtendedData();
-        if (_data.ColumnDefinitions == null)
-        {
-            _data.ColumnDefinitions = new ColumnDefinitionCollection(this);
-        }
-        _data.ColumnDefinitions.Clear();
-        foreach (var columnDefinition in value)
-        {
-            _data.ColumnDefinitions.Add(columnDefinition);
-        }
-    }
-}
-
-[TypeConverter(typeof(RowDefinitionCollectionConverter))]
-[DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
-public RowDefinitionCollection RowDefinitions
-{
-    get
-    {
-        if (_data == null) _data = new ExtendedData();
-        // Initialize with Grid if required
-        if (_data.RowDefinitions == null)
-        {
-            _data.RowDefinitions = new RowDefinitionCollection(this);
-        }
-        return _data.RowDefinitions;
-    }
-    set
-    {
-        if (value == null) throw new ArgumentNullException(nameof(value));
-        if (_data == null) _data = new ExtendedData();
-        if (_data.RowDefinitions == null)
-        {
-            _data.RowDefinitions = new RowDefinitionCollection(this);
-        }
-        _data.RowDefinitions.Clear();
-        foreach (var rowDefinition in value)
-        {
-            _data.RowDefinitions.Add(rowDefinition);
-        }
-    }
-}
-
-
-        // /// <summary>
-        // /// Returns a ColumnDefinitionCollection of column definitions.
-        // /// </summary>
-        // [DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
-        // public object ColumnDefinitions
-        // {
-        //     get
-        //     {
-        //         if (_data == null) { _data = new ExtendedData(); }
-        //         if (_data.ColumnDefinitions == null) { _data.ColumnDefinitions = new ColumnDefinitionCollection(this); }
-
-        //         return _data.ColumnDefinitions;
-        //     }
-        //     set
-        //     {
-        //         switch (value)
-        //         {
-        //             case ColumnDefinitionCollection columnDefinitions:
-        //                 _data.ColumnDefinitions = columnDefinitions;
-        //                 break;
-        //             case string columnDefinitionString:
-        //                 // Clear current column definitions and set from shorthand string
-        //                 _data.ColumnDefinitions.Clear();
-        //                 foreach (var column in ParseGridLengths(columnDefinitionString))
-        //                 {
-        //                     _data.ColumnDefinitions.Add(new ColumnDefinition { Width = column });
-        //                 }
-        //                 break;
-
-        //             default:
-        //                 throw new InvalidOperationException("Invalid value for columnDefinitions. Must be either a string or ColumnDefinitionCollection.");
-        //         }
-        //     }
-        // }
-
-        // /// <summary>
-        // /// Returns or sets a RowDefinitionCollection of row definitions.
-        // /// </summary>
-        // [DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
-        // public object RowDefinitions
-        // {
-        //     get
-        //     {
-        //         if (_data == null) { _data = new ExtendedData(); }
-        //         if (_data.RowDefinitions == null) { _data.RowDefinitions = new RowDefinitionCollection(this); }
-
-        //         return _data.RowDefinitions;
-        //     }
-        //     set
-        //     {
-        //         switch (value)
-        //         {
-        //             case RowDefinitionCollection rowDefinitions:
-        //                 _data.RowDefinitions = rowDefinitions;
-        //                 break;
-        //             case string rowDefinitionString:
-        //                 // Clear current row definitions and set from shorthand string
-        //                 _data.RowDefinitions.Clear();
-        //                 foreach (var row in ParseGridLengths(rowDefinitionString))
-        //                 {
-        //                     _data.RowDefinitions.Add(new RowDefinition { Height = row });
-        //                 }
-        //                 break;
-
-        //             default:
-        //                 throw new InvalidOperationException("Invalid value for RowDefinitions. Must be either a string or RowDefinitionCollection.");
-        //         }
-        //     }
-        // }
-
-        // Helper method to parse grid lengths from shorthand syntax
-        private static IEnumerable<GridLength> ParseGridLengths(string input)
-        {
-            var converter = new GridLengthConverter(); // Create an instance of the converter
-            var lengths = input.Split(',');
-
-            foreach (var length in lengths)
+            get
             {
-                if (converter.ConvertFromString(length.Trim()) is GridLength gridLength)
-                {
-                    yield return gridLength;
-                }
+                if (_data == null) { _data = new ExtendedData(); }
+                if (_data.ColumnDefinitions == null) { _data.ColumnDefinitions = new ColumnDefinitionCollection(this); }
+
+                return (_data.ColumnDefinitions);
             }
         }
 
+        /// <summary>
+        /// Returns a RowDefinitionCollection of row definitions.
+        /// </summary>
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
+        public RowDefinitionCollection RowDefinitions
+        {
+            get
+            {
+                if (_data == null) { _data = new ExtendedData(); }
+                if (_data.RowDefinitions == null) { _data.RowDefinitions = new RowDefinitionCollection(this); }
 
+                return (_data.RowDefinitions);
+            }
+        }
 
         #endregion Public Properties
 
